@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container">
+    <form id="send">
+      <input type="text" name="name" id="name">
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+  <div id="userDataContainer"></div> <!-- Contenedor para los datos del usuario -->
+
+  <script>
+    const url = "http://127.0.0.1:8000/login/";
+    document.getElementById("send").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const userData = {
+        name: name,
+        last_name: "Munoz",
+        phone: "123456789",
+        address: "123 Main St",
+        age: "26"
+      };
+
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      };
+
+      fetch(url, requestOptions)
+        .then((res) => {
+          document.getElementById("userDataContainer").textContent = "";
+          return res.json()
+        }
+        )
+        .then((data) => {
+          // Crear un elemento de párrafo para cada propiedad del objeto de datos
+          Object.entries(data).forEach(([key, value]) => {
+            const p = document.createElement("p");
+            p.textContent = `${key}: ${value}`;
+            document.getElementById("userDataContainer").appendChild(p);
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })
+
+  </script>
+</body>
+
+</html>
